@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.board.dao.BoardDAO;
 import com.board.dto.BoardVO;
+import com.board.dto.Criteria;
+import com.board.dto.SearchCriteria;
 
 public class BoardServiceImpl implements BoardService{
 	
@@ -25,6 +27,7 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public BoardVO read(int bno) throws Exception {
 		BoardVO board=boardDAO.selectBoardByBNO(bno);
+		boardDAO.increaseViewcnt(bno);
 		return board;
 	}
 
@@ -45,4 +48,33 @@ public class BoardServiceImpl implements BoardService{
 		return boardList;
 	}
 
+	@Override
+	public List<BoardVO> listCriteria(Criteria cri) throws Exception {
+		List<BoardVO> boardList=boardDAO.selectBOardCriteria(cri);
+		return boardList;
+	}
+
+	@Override
+	public List<BoardVO> listSearch(SearchCriteria cri) throws Exception {
+		List<BoardVO> boardList=boardDAO.selectSearchBoardList(cri);		
+		return boardList;
+	}
+
+	@Override
+	public int readSearchBoardCount(SearchCriteria cri) throws Exception {
+		
+		int count=boardDAO.selectSearchBoardCount(cri);
+		return count;
+	}
+
+	@Override
+	public BoardVO readByBno(int bno) throws Exception {
+		BoardVO board=boardDAO.selectBoardByBNO(bno);
+		return board;
+	}
+
 }
+
+
+
+
