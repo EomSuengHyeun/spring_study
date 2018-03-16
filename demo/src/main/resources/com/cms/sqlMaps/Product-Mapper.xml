@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ProductMapper">
+	<select id="selectProductList" resultType="product">
+		select *
+		from product
+		order by product_updatedate desc
+	</select>
+	<select id="selectProductByID" resultType="product">
+		select *
+		from product
+		where
+		product_id=#{product_id}
+	</select>
+	<update id="insertProduct" parameterType="product">
+		insert
+		into
+		product(product_id,product_name,product_price,product_detail,product_img)
+		values
+		(product_seq.nextval,#{product_name},#{product_price},#{product_detail},#{product_img})
+	</update>
+	<update id="updateProduct" parameterType="product">
+		update
+		product
+		set
+		product_name=#{product_name},
+		product_price=#{product_price},
+		product_detail=#{product_detail},
+		product_updatedate=#{product_updatedate},
+		product_img=#{product_img}
+		where
+		product_id=#{product_id}
+	</update>
+	<update id="deleteProduct" parameterType="int">
+		delete
+		from
+		product
+		where
+		product_id=#{product_id}
+	</update>
+
+	<sql id="search">
+		<if test="searchType !=null">
+			<if test="searchType=='i'.toString()">
+				where product_id like '%'||#{keyword}||'%'
+			</if>
+			<if test="searchType=='n'.toString()">
+				where product_name like '%'||#{keyword}||'%'
+			</if>
+			<if test="searchType=='c'.toString()">
+				where product_detail like '%'||#{keyword}||'%'
+			</if>			
+			<if test="searchType=='nc'.toString()">
+				where (product_name like '%'||#{keyword}||'%'
+				OR product_detail like '%'||#{keyword}||'%')				
+			</if>
+		</if>
+	</sql>
+	<select id="selectSearchProductList" resultType="product">
+		<![CDATA[
+			select *
+			from product		
+		]]>
+		<include refid="search"/>
+		order by product_updatedate desc
+	</select>
+	<select id="selectSearchProductCount" resultType="int">
+		<![CDATA[
+			select count(*)
+			from product		
+		]]>
+		<include refid="search"/>
+		order by product_updatedate desc
+	</select>
+</mapper>
+
+
+
+
+
