@@ -15,6 +15,8 @@ import java.util.Set;
 
 import com.board.dao.BoardDAO;
 import com.board.dto.BoardVO;
+import com.board.dto.Criteria;
+import com.board.dto.SearchCriteria;
 
 public class MockBoardDAOImpl implements BoardDAO {	
 	
@@ -114,6 +116,42 @@ public class MockBoardDAOImpl implements BoardDAO {
 		}		
 		
 		return boardList;
+	}
+
+	@Override
+	public List<BoardVO> selectBoardPage(int page) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<BoardVO> selectBOardCriteria(Criteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int countBoard() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<BoardVO> selectSearchBoardList(SearchCriteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int selectSearchBoardCount(SearchCriteria cri) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void increaseViewcnt(int bno) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
