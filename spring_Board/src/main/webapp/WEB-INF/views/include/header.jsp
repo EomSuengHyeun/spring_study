@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
    
 <!DOCTYPE html>
 <html>
@@ -234,12 +237,12 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">HEADER</li>
+        <li class="header"><strong>관리자 메뉴</strong></li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <li class="active"><a href="sboard/listPage"><i class="fa fa-link"></i> <span>게시판 관리</span></a></li>
+        <li><a href="product/listPage"><i class="fa fa-link"></i> <span>상품 관리</span></a></li>
         <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+          <a href="member/listPage"><i class="fa fa-link"></i> <span>회원 관리</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -269,5 +272,26 @@
             <li class="active">General Elements</li>
           </ol>
         </section>
+
+<script>
+	$('ul.sidebar-menu li a').on('click',function(event){
+		
+		event.preventDefault();
+		
+		var uri=$(this).attr("href");
+		
+		self.location="<c:url value="/" />"+uri;
+	});
+</script>
+
+
+
+
+
+
+
+
+
+
 
  
