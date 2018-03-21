@@ -144,9 +144,71 @@
 </section>
 <!-- /.content -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+<script id="template" type="text/x-handlebars-template">
+{{#each .}}
+<li class="replyLi" data-rno={{rno}}>
+<i class="fa fa-comments bg-blue"></i>
+ <div class="timeline-item" >
+  <span class="time">
+    <i class="fa fa-clock-o"></i>{{prettifyDate regdate}}
+  </span>
+  <h3 class="timeline-header"><strong>{{rno}}</strong> -{{replyer}}</h3>
+  <div class="timeline-body">{{replytext}} </div>
+    <div class="timeline-footer">
+     <a class="btn btn-primary btn-xs" 
+	    data-toggle="modal" data-target="#modifyModal">Modify</a>
+    </div>
+  </div>			
+</li>
+{{/each}}
+</script>
 
 <script>
+	Handlebars.registerHelper("prettifyDate",function(timeValue){
+		var dateObj=new Date(timeValue);
+		var year=dateObj.getFullYear();
+		var month=dateObj.getMonth();
+		var date=dateObj.getDate();
+		return year+"/"+month+"/"+date;
+	});
+	
+	var printData=function(replyArr,target,templateObject){
+		var template=Handlebars.compile(templateObject.html());
+		var html=template(replyArr);
+		$('.replyLi').remove();
+		target.after(html);
+	};
+	var printPaging=function(pageMaker,target){
+		var str="";
+		if(pageMaker.prev){
+			str+="<li><a href='"+(pageMaker.startPage-1)
+					+"'> << </a></li>";
+		}
+		for(var i=pageMaker.startPage,len=pageMaker.endPage;i<=len;i++){
+			var strClass = pageMaker.cri.page==i?'class=active':'';
+			str+="<li "+strClass+"><a href='"+i+"'>"+i+"</a></li>";
+		}
+		if(pageMaker.next){
+			str+="<li><a href='"+(pageMaker.endPage+1)
+				+"'> >> </a></li>";
+		}
+		target.html(str);
+	}
+	
 	var bno=${boardVO.bno};
+	var replyPage=1;
+	
+	getPage("<%=request.getContextPath()%>/replies/"+bno+"/1");
+	
+	
+	
+	function getPage(pageInfo){
+		$.getJSON(pageInfo,function(data){
+			printData(data.list,$('#repliesDiv'),$('#template'));
+			printPaging(data.pageMaker,$('.pagination'))
+		});
+	}
 	
 	$('#replyAddBtn').on('click',function(event){
 		var replyer=$('#newReplyWriter').val();
@@ -175,7 +237,73 @@
 				"bno":bno,
 				"replyer":replyer,
 				"replytext":replytext
-			})
+			}),
+			success:function(data){
+				if(data="SUCCESS"){
+					alert('등록되었습니다.');
+				}
+				replyPage=1;
+				getPage("<%=request.getContextPath()%>/replies/"+bno+"/"+replyPage);
+				$('#newReplyWriter').val("");
+				$('#newReplyText').val("");
+			}
+			
+		});
+	});
+	
+	$('.pagination').on('click','li a',function(event){		
+		event.preventDefault();		
+		var replyPage=$(this).attr("href");
+		getPage("<%=request.getContextPath()%>/replies/"+bno+"/"+replyPage);
+	});
+	
+	$('.timeline').on('click','.replyLi',function(event){
+		var reply=$(this);
+		$('#replytext').val(reply.find('.timeline-body').text());
+		$('.modal-title').html(reply.attr('data-rno'));
+	});
+	
+	$('#replyModBtn').on('click',function(event){
+		var rno=$('.modal-title').html();
+		var replytext=$('#replytext').val();
+		$.ajax({
+			type:'put',
+			url:"<%=request.getContextPath()%>/replies/"+rno,
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Method-Override":"PUT"
+			},
+			data:JSON.stringify({replytext:replytext}),
+			dataType:'text',
+			success:function(result){
+				if(result=="SUCCESS"){
+					alert("수정되었습니다.");
+					$('#modifyModal').modal('hide');
+					getPage("<%=request.getContextPath()%>/replies/"+bno+"/"+replyPage);
+				}
+			}
+			
+		});
+	});
+	
+	$('#replyDelBtn').on('click',function(event){
+		var rno=$('.modal-title').html();
+		
+		$.ajax({
+			type:'delete',
+			url:"<%=request.getContextPath()%>/replies/"+rno,
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Override":"delete"
+			},
+			dataType:'text',
+			success:function(result){
+				if(result="SUCCESS"){
+					alert("삭제되었습니다.");
+					$('#modifyModal').modal('hide');
+					getPage("<%=request.getContextPath()%>/replies/"+bno+"/"+replyPage);
+				}
+			}
 		});
 	});
 </script>
