@@ -21,7 +21,16 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void create(BoardVO board) throws Exception {
+		int nextval=boardDAO.selectBoardSeqNextVal();
+		board.setBno(nextval);
 		boardDAO.insertBoard(board);
+		
+		String[] files=board.getFiles();
+		if(files==null)return;
+		for(String fileName:files){
+			boardDAO.insertAttach(fileName, nextval);			
+		}
+		
 	}
 
 	@Override

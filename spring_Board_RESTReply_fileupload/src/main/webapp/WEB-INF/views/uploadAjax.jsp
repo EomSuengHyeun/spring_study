@@ -26,8 +26,12 @@ small{
 	
 	<div class="uploadedList" ></div>
 	
+	<button type="button" id='submitBtn'>등록</button>
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script>
+		$(this).on("dragenter dragover drop",function(event){
+			event.preventDefault();
+		});
 		$(".fileDrop").on("dragenter dragover",function(event){
 			event.preventDefault();
 		});
@@ -36,8 +40,15 @@ small{
 			event.preventDefault();
 			
 			var files=event.originalEvent.dataTransfer.files;
-			var file=files[0];
 			
+			
+			for(var i=0;i<files.length;i++){
+				addFile(files[i]);
+			}
+			
+		});
+		
+		function addFile(file){
 			var formData=new FormData();
 			formData.append("file",file);
 			
@@ -67,7 +78,7 @@ small{
 					$(".uploadedList").append(str);
 				}
 			});
-		});
+		}
 		
 		function checkImageType(fileName){
 			var pattern=/jpg|gif|png|jpeg/i;
@@ -91,6 +102,46 @@ small{
 			var end=fileName.substr(14);
 			return front+end;
 		}
+		
+		$('.uploadedList').on('click','small',function(event){
+			var data=$(this).attr("data-src");
+			var that=$(this);
+			
+			$.ajax({
+				url:"deleteFile",
+				type:"post",			
+				data:{fileName:data},				
+				success:function(data){
+					if(data=="deleted"){
+						that.parent("div").remove();
+					}
+				}
+			});
+		});
+		
+		var submitBtn = false;
+		
+		$('#submitBtn').on('click',function(event){
+			submitBtn=true;
+			alert(submitBtn);
+		});
+		window.onbeforeunload = function () {
+			console.log(submitBtn);
+			if(!submitBtn){				
+				$('.uploadedList small').each(function(event){
+					var data = $(this).attr("data-src");
+					
+					$.ajax({
+						url:"deleteFile",
+						type:"post",			
+						data:{fileName:data}
+					});
+				});
+			};		
+		};
+		
+		
+				
 	</script>
 </body>
 </html>

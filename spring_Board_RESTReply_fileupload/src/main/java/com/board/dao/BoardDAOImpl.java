@@ -1,6 +1,8 @@
 package com.board.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -17,6 +19,13 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	private static final String NAMESPACE="BoardMapper";
+	
+	@Override
+	public int selectBoardSeqNextVal()throws Exception{
+		int nextval=
+	(Integer)session.selectOne(NAMESPACE+".selectBoardSeqNextVal");
+		return nextval;
+	}	
 	
 	@Override
 	public void insertBoard(BoardVO board) throws Exception {
@@ -103,6 +112,38 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void increaseViewcnt(int bno) throws Exception {
 		session.update(NAMESPACE+".increaseViewCnt",bno);		
+	}
+
+	@Override
+	public void insertAttach(String fullname, int bno) throws Exception {
+		Map<String,Object> paramMap=new HashMap<String,Object>();
+		paramMap.put("fullname",fullname);
+		paramMap.put("bno", bno);
+		
+		session.update(NAMESPACE+".insertAttach",paramMap);
+		
+	}
+
+	@Override
+	public void deleteAttach(int bno) throws Exception {
+		session.update(NAMESPACE+".deleteAttach",bno);
+		
+	}
+
+	@Override
+	public List<String> selectAttach(int bno) throws Exception {
+		List<String> files=session.selectList(NAMESPACE+".selectAttach",bno);
+		return files;
+	}
+
+	@Override
+	public void replayAttach(String fullname, int bno) throws Exception {
+		Map<String,Object> paramMap=new HashMap<String,Object>();
+		paramMap.put("fullname",fullname);
+		paramMap.put("bno", bno);
+		
+		session.update(NAMESPACE+".insertAttach",paramMap);
+		
 	}
 
 }

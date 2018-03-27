@@ -5,9 +5,13 @@
 
 <mapper namespace="BoardMapper">
 	
+	<select id="selectBoardSeqNextVal" resultType="int">
+		select board_seq.nextval from dual
+	</select>
+	
 	<update id="insertBoard">
 		insert into tbl_board (bno, title, content, writer)
-		values(board_seq.nextval,#{title},#{content},#{writer})
+		values(#{bno},#{title},#{content},#{writer})
 	</update>
 	
 	<select id="selectBoardByBNO" resultType="board" >
@@ -101,6 +105,26 @@
 		update tbl_board set viewcnt=viewcnt+1
 		where bno=#{bno}
 	</update>
+	
+	
+	<update id="insertAttach">
+		insert into tbl_attach(fullname,bno)
+		values(#{fullname},#{bno})
+	</update>
+	<update id="deleteAttach">
+		delete from tbl_attach
+		where bno=#{bno}
+	</update>
+	<update id="replaceAttach">
+		insert into tbl_attach(fullname,bno)
+		values(#{fullname},#{bno})
+	</update>
+	<select id="selectAttach" resultType="str">
+		select fullname
+		from tbl_attach
+		where bno=#{bno}
+		order by regdate
+	</select>
 </mapper>
 
 

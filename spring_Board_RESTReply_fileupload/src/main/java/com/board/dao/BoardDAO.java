@@ -8,7 +8,8 @@ import com.board.dto.SearchCriteria;
 
 public interface BoardDAO {
 	
-	public void insertBoard(BoardVO board)throws Exception;
+	public int selectBoardSeqNextVal() throws Exception;
+	public void insertBoard(BoardVO board)throws Exception;	
 	public BoardVO selectBoardByBNO(int bno)throws Exception;
 	public void updateBorad(BoardVO board)throws Exception;
 	public void deleteBoard(int bno)throws Exception;
@@ -26,6 +27,13 @@ public interface BoardDAO {
 	int selectSearchBoardCount(SearchCriteria cri)
 								throws Exception;
 	void increaseViewcnt(int bno) throws Exception;
+	
+	
+	// 파일 추가/삭제
+	void insertAttach(String fullname,int bno)throws Exception;
+	void deleteAttach(int bno)throws Exception;
+	List<String> selectAttach(int bno)throws Exception;
+	void replayAttach(String fullname,int bno)throws Exception;
 	
 }
 
