@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.dto.BoardVO;
@@ -90,6 +92,13 @@ public class SearchBoardController {
 		service.create(board);
 		rttr.addFlashAttribute("msg","SUCCESS");
 		return "redirect:/sboard/listPage";
+	}
+	
+	@RequestMapping(value="/getAttach/{bno}",method=RequestMethod.GET)
+	@ResponseBody
+	public List<String> getAttach(@PathVariable("bno")int bno)
+									throws Exception{
+		return service.getAttach(bno);
 	}
 }
 

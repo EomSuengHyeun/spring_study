@@ -43,7 +43,10 @@
 					</div>
 				</div>
 				<!-- /.box-body -->
-
+				
+				<!-- attach list -->
+				<ul class="mailbox-attachments clearfix uploadedList"></ul>
+				
 				<div class="box-footer">
 					<button type="submit" id="modifyBtn" class="btn btn-warning">Modify</button>
 					<button type="submit" id="removeBtn" class="btn btn-danger">REMOVE</button>
@@ -65,6 +68,17 @@
 		});
 
 		$("#removeBtn").on("click", function() {
+			
+			var arr=[];
+			$('.uploadedList li').each(function(event){
+				arr.push($(this).attr("data-src"));
+				
+			});
+			
+			if(arr.length>0){
+				$.post('<%=request.getContextPath()%>/deleteAllFiles',{files:arr},function(){});				
+			}
+			
 			formObj.attr("action", "removePage");
 			formObj.submit();
 		});
@@ -163,7 +177,16 @@
 </li>
 {{/each}}
 </script>
+<script id="templateAttach" type="text/x-handlebars-template">
+<li style="width:10%;font-size:0.8em;" data-src="{{fullName}}">
+	<span class="mailbox-attachment-icon has-img">
+      <img src="{{imgsrc}}" alt="Attachment"></span>
+    <div class="mailbox-attachment-info">
+	  <a href="{{getLink}}" class="mailbox-attachment-name">{{fileName}}</a>      
+    </div>
+</li>
 
+</script>
 <script>
 	Handlebars.registerHelper("prettifyDate",function(timeValue){
 		var dateObj=new Date(timeValue);
@@ -304,6 +327,26 @@
 					getPage("<%=request.getContextPath()%>/replies/"+bno+"/"+replyPage);
 				}
 			}
+		});
+	});
+</script>
+
+<!-- attach list -->
+<script 
+   src="<%=request.getContextPath() %>/resources/js/upload.js" >
+</script>
+
+<script>
+	
+	var bno=${boardVO.bno};
+	var template=Handlebars.compile($('#templateAttach').html());
+
+	$.getJSON("getAttach/"+bno,function(list){
+		$(list).each(function(){
+			var fileInfo=getFileInfo(this,"<%=request.getContextPath()%>");
+			var html=template(fileInfo);
+			$('.uploadedList').append(html);
+			
 		});
 	});
 </script>

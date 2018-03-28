@@ -44,6 +44,16 @@ public class BoardServiceImpl implements BoardService{
 	public void modify(BoardVO board) throws Exception {
 		boardDAO.updateBorad(board);
 		
+		int bno = board.getBno();
+		boardDAO.deleteAttach(bno);
+		
+		String[] files=board.getFiles();
+		System.out.println(files);
+		
+		if(files==null){return;}
+		for(String fileName:files){
+			boardDAO.replayAttach(fileName, bno);
+		}
 	}
 
 	@Override
@@ -80,6 +90,12 @@ public class BoardServiceImpl implements BoardService{
 	public BoardVO readByBno(int bno) throws Exception {
 		BoardVO board=boardDAO.selectBoardByBNO(bno);
 		return board;
+	}
+
+	@Override
+	public List<String> getAttach(int bno) throws Exception {
+		List<String> attachList=boardDAO.selectAttach(bno);
+		return attachList;
 	}
 
 }

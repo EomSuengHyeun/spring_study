@@ -24,6 +24,7 @@ public interface BoardService {
 	int readSearchBoardCount(SearchCriteria cri)
 										throws Exception;
 	
+	List<String> getAttach(int bno)throws Exception;	
 	
 	
 }

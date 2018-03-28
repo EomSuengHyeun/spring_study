@@ -158,10 +158,11 @@ button#searchBtn{
 
 <script>
 	var result = '${msg}';
-
 	if (result == 'SUCCESS') {
 		alert("처리가 완료되었습니다.");
 	}
+	
+	<c:remove var="msg" />
 	
 	$(".link li a").on("click", function(event){
 		
