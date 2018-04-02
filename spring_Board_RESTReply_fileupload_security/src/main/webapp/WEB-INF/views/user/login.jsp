@@ -8,13 +8,13 @@
     <title>AdminLTE 2 | Log in</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.4 -->
-    <link href="/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- Font Awesome Icons -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
-    <link href="/resources/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/resources/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- iCheck -->
-    <link href="/resources/plugins/iCheck/square/blue.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/resources/plugins/iCheck/square/blue.css" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,15 +26,15 @@
   <body class="login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="/resources/index2.html"><b>Zerock</b>Project</a>
+        <a href="<%=request.getContextPath()%>/resources/index2.html"><b>Zerock</b>Project</a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
-<form action="/user/loginPost" method="post">
+<form action="<%=request.getContextPath() %>/user/loginPost" method="post">
 	<input type="hidden" name="returl" value="${param.returl }" />
   	<div class="form-group has-feedback">
-    <input type="text" name="uid" class="form-control" placeholder="USER ID"/>
+    <input type="text" name="uid" class="form-control" placeholder="USER ID" value="${param.uid }"/>
     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
   </div>
   <div class="form-group has-feedback">
@@ -70,8 +70,40 @@
 			alert("로그인에 실패했습니다.");
 		</script>
 	</c:if>
-	
+	<script
+  src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <script src="<%=request.getContextPath() %>/resources/bootstrap/js/bootstrap.min.js"></script>	
+	<script>
+		function login_go(){
+			$.ajax({
+				url:"loginPost",
+				data:$('form').serialize(),
+				type:"post",
+				dataType:'json',				
+				beforeSend:function(xhr){
+					xhr.setRequestHeader("Accept","application/json");			
+				}
+			}).done(function(body){
+				var message=body.message;
+				var retUrl=body.retUrl;
+				
+				alert(message);
+				location.href=retUrl; 
+			});
+		};
+	</script>
    
     
-  </body>
+ </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

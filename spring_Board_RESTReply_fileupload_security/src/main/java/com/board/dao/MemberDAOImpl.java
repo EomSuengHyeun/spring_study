@@ -9,11 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import com.board.dto.MemberVO;
 
-@Repository
-public class MemberDAOImpl implements MemberDAO{
 
-	@Autowired
+public class MemberDAOImpl implements MemberDAO{
+	
 	private SqlSession session;
+	public void setSession(SqlSession session){
+		this.session=session;
+	}
 	
 	private static final String NAMESPACE="MemberMapper";
 

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@include file="../include/header.jsp"%>
 
@@ -48,8 +49,12 @@
 				<ul class="mailbox-attachments clearfix uploadedList"></ul>
 				
 				<div class="box-footer">
-					<button type="submit" id="modifyBtn" class="btn btn-warning">Modify</button>
+					<sec:authorize access="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN')">
+						<button type="submit" id="modifyBtn" class="btn btn-warning">Modify</button>
+					</sec:authorize>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<button type="submit" id="removeBtn" class="btn btn-danger">REMOVE</button>
+					</sec:authorize>
 					<button type="submit" id="listBtn" class="btn btn-primary">GO LIST</button>
 				</div>
 

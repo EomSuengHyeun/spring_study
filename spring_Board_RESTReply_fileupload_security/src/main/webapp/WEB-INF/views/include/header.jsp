@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
    
@@ -153,50 +154,66 @@
             </ul>
           </li>
           <!-- User Account Menu -->
-          <li class="dropdown user user-menu">
-            <!-- Menu Toggle Button -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <!-- The user image in the navbar-->
-              <img src="<%=request.getContextPath() %>/resources/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-              <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- The user image in the menu -->
-              <li class="user-header">
-                <img src="<%=request.getContextPath() %>/resources/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
-                </p>
-              </li>
-              <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                </div>
-                <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                </div>
-              </li>
-            </ul>
+          <sec:authorize access="!isAuthenticated()">
+          <li class="dropdown user user-menu">    
+          	<a href="#" class="dropdown-toggle" style="padding:10px;"
+          	   data-toggle="dropdown">
+          	   <button class="btn btn-primary">Sign in</button>
+          	</a>
+          	<ul class="dropdown-menu">
+          		<!-- menu body -->
+          		<li class="user-body">
+          			<form action="<%=request.getContextPath() %>/user/loginPost"
+          				  method="post">
+          				  <input type="hidden" name="returl" value="${param.returl }"/>
+          				  <div class="form-group has-feedback">
+          				  	<input type="text" name="uid" class="form-control" 
+          				  		   placeholder="USER-ID"/>
+          				  	<span class="glyphicon glyphicon-envelope form-control-feedback">
+          				  	</span>           				  	
+          				  </div>
+          				  <div class="form-group has-feedback">
+          				  	<input type="password" name="upwd" class="form-control" 
+          				  		   placeholder="USER-PASSWORD"/>
+          				  	<span class="glyphicon glyphicon-envelope form-control-feedback">
+          				  	</span>           				  	
+          				  </div>
+          				  <button type="button" onclick="login_go();"
+          				  		  class="btn btn-primary btn-block btn-flat">Sing in</button>
+          				  
+          			</form>
+          		</li>
+          	</ul>	        
           </li>
+          </sec:authorize>
+          
+          <sec:authorize access="isAuthenticated()">          
+          <li class="dropdown user user-menu">  
+          	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          		<img src="<%=request.getContextPath() %>/resources/dist/img/user2-160x160.jpg"
+          		class="user-image" alt="User Image" />
+          		<span class="hidden-xs">${loginUser.username }</span>
+          	</a>
+          	<ul class="dropdown-menu">
+          		<li class="user-header">
+          			<img src="<%=request.getContextPath() %>/resources/dist/img/user2-160x160.jpg"
+          				 class="img-circle" alt="User Image" />
+	          		<p>
+	          			${loginUser.userid } : ${loginUser.username } 님 환영합니다.
+	          			<small>등록일 : ${loginUser.regDate }</small>
+	          		</p>
+          		</li>
+          		
+          		<li class="user-body">
+          			<button class="btn btn-primary btn-block btn-flat"
+          			onclick="logout_go();">Sign out</button>
+          		</li>
+          	</ul> 
+          	 
+          </li>
+          </sec:authorize>
+          
+          
           <!-- Control Sidebar Toggle Button -->
           <li>
             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
@@ -282,6 +299,11 @@
 		
 		self.location="<c:url value="/" />"+uri;
 	});
+	
+	function login_go(){};
+	function logout_go(){
+		location.href="<%=request.getContextPath()%>/user/logout";		
+	};	
 </script>
 
 

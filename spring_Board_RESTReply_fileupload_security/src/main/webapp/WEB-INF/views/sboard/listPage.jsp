@@ -2,7 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ page session="false"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+
 
 <%@include file="../include/header.jsp"%>
 
@@ -50,9 +52,11 @@ button#searchBtn{
 				</div>
 				<div class='box-body'>
 					<ul>
+						<sec:authorize access="hasAnyRole('ROLE_MANAGER','ROLE_ADMIN')">
 						<li>
 							<button id='newBtn' class="btn btn-primary" onclick="javascript:location.href='register';">New Board</button>
 						</li>
+						</sec:authorize>
 						<li>
 							<select name="searchType">
 								<option value="" ${cri.searchType==null?'selected':'' }>

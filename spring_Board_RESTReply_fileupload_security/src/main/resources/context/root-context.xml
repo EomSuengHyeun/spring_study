@@ -78,6 +78,14 @@
 		  class="com.board.service.ReplyServiceImpl"
 		  p:dao-ref="replyDAO"
 		  />	
+	<bean id="memberDAO"
+		  class="com.board.dao.MemberDAOImpl"
+		  p:session-ref="sqlSession"
+		  />
+	<bean id="memberService"
+	      class="com.board.service.MemberServiceImpl"
+	      p:memberDAO-ref="memberDAO" 
+	      />
 </beans>
 
 

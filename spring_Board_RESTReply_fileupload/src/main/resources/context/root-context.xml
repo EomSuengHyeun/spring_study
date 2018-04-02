@@ -78,6 +78,9 @@
 		  class="com.board.service.ReplyServiceImpl"
 		  p:dao-ref="replyDAO"
 		  />	
+	
+		  
+			  
 </beans>
 
 
